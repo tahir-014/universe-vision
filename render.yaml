@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: universe-vision
-    env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn app.app:app"
-    pythonVersion: 3.10
