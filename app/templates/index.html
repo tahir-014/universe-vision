@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Universe Vision</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Inter&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container glass">
+    <header>
+      <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="Universe Vision Logo">
+      <h1>Universe Vision</h1>
+      <p class="subtitle">Seeing everything — real or imagined</p>
+    </header>
+
+    <form method="POST" enctype="multipart/form-data" class="upload-form">
+      <label for="imageInput" class="upload-label">📸 Upload or Capture Image:</label>
+      <input type="file" id="imageInput" name="image" accept="image/*" capture="environment" required>
+      <button type="submit">🚀 Predict</button>
+    </form>
+
+    {% if top3 %}
+      <div class="prediction-card">
+        <h3>Top 3 Predictions:</h3>
+        {% for label, score in top3 %}
+          <p>{{ label }} – {{ score }}%</p>
+          <div class="bar-container">
+            <div class="bar" style="width: {{ score }}%;"></div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <footer>
+      <p><a href="/about">About this AI</a> • © Universe Vision</p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,123 @@
+/* === Global Reset === */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  color: white;
+  background: #000;
+  background-image: url('https://static01.nyt.com/images/2022/07/12/multimedia/-12vid-nasa-highlights-video-cover/-12vid-nasa-highlights-video-cover-videoSixteenByNine3000.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+}
+
+/* === Dark overlay for contrast === */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: -1;
+}
+
+/* === Layout === */
+.container {
+  max-width: 500px;
+  margin: 60px auto;
+  padding: 30px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
+}
+
+/* === Header === */
+header h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.2rem;
+  color: #00e5ff;
+  margin: 10px 0;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #ccc;
+  margin-bottom: 25px;
+}
+
+.logo {
+  width: 100px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+}
+
+/* === Upload Section === */
+.upload-label {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: #00e5ff;
+}
+
+input[type="file"] {
+  margin-bottom: 20px;
+  width: 100%;
+  color: white;
+}
+
+button {
+  padding: 12px 30px;
+  background: #00e5ff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #00bcd4;
+}
+
+/* === Prediction Result === */
+.prediction-card {
+  margin-top: 30px;
+  padding: 20px;
+  background: rgba(0, 229, 255, 0.1);
+  border-radius: 15px;
+  border: 1px solid #00e5ff50;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+}
+
+.bar-container {
+  width: 100%;
+  background: #111;
+  height: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.bar {
+  height: 100%;
+  background: linear-gradient(90deg, #00e5ff, #00bcd4);
+  border-radius: 5px;
+}
+
+/* === Footer === */
+footer {
+  margin-top: 40px;
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+a {
+  color: #00e5ff;
+  text-decoration: none;
+}
