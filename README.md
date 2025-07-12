@@ -21,3 +21,14 @@ git commit -m "Initial commit"
 git branch -M main
 git push -f origin main
 
+
+venv\Scripts\activate
+
+python -m venv venv
+python app/app.py
+
+python –version
+python scripts/train_model.py
+model/.keep
+
+
