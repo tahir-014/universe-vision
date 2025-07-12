@@ -1,43 +1,68 @@
-from flask import Flask, render_template, request
+# app/app.py
+
+import os
+from flask import Flask, request, render_template, redirect, url_for
+import tensorflow as tf
 import numpy as np
 from PIL import Image
-from tensorflow.keras.models import load_model
-import os
 
+# --- Flask setup ---
 app = Flask(__name__)
 
-# Load model once at startup
-model_path = os.path.join("model", "universe_vision.h5")
-model = load_model(model_path)
+# --- Load TFLite model ---
+try:
+    model_path = os.path.join('model', 'universe_vision.tflite')
+    interpreter = tf.lite.Interpreter(model_path=model_path)
+    interpreter.allocate_tensors()
 
-# CIFAR-10 Labels
-labels = ['airplane', 'automobile', 'bird', 'cat', 'deer',
-          'dog', 'frog', 'horse', 'ship', 'truck']
+    input_details = interpreter.get_input_details()
+    output_details = interpreter.get_output_details()
 
-@app.route("/", methods=["GET", "POST"])
+    print("✅ TFLite model loaded successfully.")
+except Exception as e:
+    print(f"❌ Error loading TFLite model: {e}")
+    interpreter = None
+
+# --- Labels (replace with your actual labels) ---
+class_names = ['Class A', 'Class B', 'Class C']  # Add real class names here
+
+# --- Prediction Function ---
+def predict_image(img_array):
+    img_array = img_array.astype(np.float32)
+    img_array = img_array.reshape(input_details[0]['shape'])  # [1, height, width, 3]
+
+    interpreter.set_tensor(input_details[0]['index'], img_array)
+    interpreter.invoke()
+    output = interpreter.get_tensor(output_details[0]['index'])
+
+    top_3_indices = np.argsort(output[0])[::-1][:3]
+    predictions = [(class_names[i], float(output[0][i])) for i in top_3_indices]
+    return predictions
+
+# --- Routes ---
+@app.route('/')
 def index():
-    top3 = None
-    if request.method == "POST":
-        image = request.files["image"]
+    return render_template('index.html')
 
-        try:
-            # Resize image to 32x32
-            img = Image.open(image).resize((32, 32))
-            img_array = np.expand_dims(np.array(img) / 255.0, axis=0)
+@app.route('/predict', methods=['POST'])
+def predict():
+    if 'file' not in request.files:
+        return redirect(request.url)
 
-            # Predict
-            pred = model.predict(img_array)[0]
-            top3_idx = pred.argsort()[-3:][::-1]  # Top 3 predictions
-            top3 = [(labels[i], round(float(pred[i]) * 100, 2)) for i in top3_idx]
+    file = request.files['file']
+    if file.filename == '':
+        return redirect(request.url)
 
-        except Exception as e:
-            top3 = [("❌ Error processing image", 0)]
+    if file:
+        image = Image.open(file).convert("RGB")
+        image = image.resize((224, 224))  # Match input size
+        img_array = np.array(image) / 255.0
+        img_array = np.expand_dims(img_array, axis=0)
 
-    return render_template("index.html", top3=top3)
+        predictions = predict_image(img_array)
+        return render_template('result.html', predictions=predictions)
 
-@app.route("/about")
-def about():
-    return render_template("about.html")
+    return redirect(url_for('index'))
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
